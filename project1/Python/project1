@@ -10,7 +10,7 @@ fig1 = plt.figure()
 fig2 = plt.figure()
 
 # Define the test case
-testcase = (10, 100, 1000)
+testcase = (10, 10, 10)
 print 'Gaussian Elimination'
 
 # Loop for different number of points
@@ -43,7 +43,7 @@ for m in testcase:
     x = (np.arange(n + 1.0)) / n
     x = x[range(1, n)]                     # Delete 0 in the denominator
     u = u[0,range(1,n)]                    # Delete corresponding u
-    u_exact = 1-(1-np.exp(-10.0))*x-np.exp(-10.0*x)
+    u_exact = 1.0-(1.0-np.exp(-10.0))*x-np.exp(-10.0*x)
     u_exact.reshape((1, n-1))
     e = np.log10((u-u_exact)/u_exact)      # error
 
@@ -83,8 +83,8 @@ for m in testcase:
     x = x[range(1, m)]                        # Delete 0 in denominator
     X = X[range(1, m)]
     u_exact = 1-(1-np.exp(-10.0))*x-np.exp(-10.0*x)
-    u_exact.reshape((1, m+1))
-    u_exact = u_exact[1:m]
+    #u_exact.reshape((1, m+1))
+    #u_exact = u_exact[1:m]
     e2 = np.log10(np.abs(X-u_exact)/u_exact)
 
     print 'time for LU is ', finish - start, 's'
@@ -99,4 +99,4 @@ for m in testcase:
 plt.figure(3)
 plt.plot(x, u_exact, label='exact')
 plt.legend()
-#plt.show()
+plt.show()
