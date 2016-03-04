@@ -6,6 +6,7 @@ from CalculateEigV import *
 # import matplotlib.pyplot as plt
 import numpy.linalg as la
 
+import time
 n = 4
 rho_max = 1
 err = 1E-8
