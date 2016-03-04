@@ -4,14 +4,18 @@ from CalculateB import *
 import numpy as np
 from CalculateEigV import *
 import matplotlib.pyplot as plt
+import numpy.linalg as la
 
 n = 4
 rho_max = 1
-err = 1E-14
+err = 1E-8
 A = construct_A(n, rho_max)
 # print(A)
+w, v = la.eig(A)
+print "w = ",w
+print "v = ",v
 maxValue = 999
-EigV = np.ones([n, n])
+EigV = np.diag(np.ones(5))
 maxReturn = A_max(A)
 maxValue = maxReturn[2]
 maxPosition = maxReturn[0:2]
@@ -32,7 +36,7 @@ print "Eig vectors = ", EigV
 
 Bdiag = np.diag(B)
 plt.plot(EigV)
-plt.show()
+# plt.show()
 
 Bdiag = np.diag(B)
 E = Bdiag*EigV
