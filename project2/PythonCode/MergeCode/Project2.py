@@ -8,24 +8,32 @@ import numpy.linalg as la
 from GenerateA2 import *
 from GenerateA2w import *
 import time
+import scipy.sparse.linalg as sla
 
 def argsort(seq):
     return [x for x,y in sorted(enumerate(seq), key = lambda x: x[1])]
 
 n = 100
 rho_max = 5
-err = 1E6
+err = 1E-6
 wr = 1
 system = 1
+method = 3      # 1: Jacobi 2: numpy.la.eig 3: Lanczos
 for wr in [0.01, 0.5, 1, 5]:
     if system == 0:
         A = construct_A(n, rho_max)
     if system == 1:
         A = construct_A2(n, rho_max, wr)
     if system == 2:
-         A = construct_A2w(n, rho_max, wr)
+        A = construct_A2w(n, rho_max, wr)
     # print(A)
-    w, v = la.eig(A)
+    if method == 2:
+        w, v = la.eig(A)
+        err = 1E8
+    if method == 3:
+        print 'Lanczos'
+        err = 1E8
+        w, v = sla.eigs(A, k=3, which='SR')
     # print "w = ",w
     # print "v = ",v
     maxValue = 999
@@ -45,9 +53,14 @@ for wr in [0.01, 0.5, 1, 5]:
 
     finish = time.clock()
     oriEigValue = np.diag(A)
-    oriEigValue = w
+
     sortIdx = argsort(oriEigValue)
     EigenValues = sorted(np.diag(A))
+    if (method == 2) | (method == 3):
+        oriEigValue = w
+        EigV = v
+        print w
+        EigenValues = sorted(w)
 
     print "Three lowest Eigen values = ", EigenValues[0:3]
     print "The time used for calculation is ", finish-start
@@ -58,11 +71,16 @@ for wr in [0.01, 0.5, 1, 5]:
     r = (r + r[1])*rmax
     stepLength = rmax/n
     # print r
-    EigV = v
     Bdiag = np.diag(A)
-    EigV1 = EigV[:,sortIdx[0]]*EigV[:,sortIdx[0]]
-    EigV2 = EigV[:,sortIdx[1]]*EigV[:,sortIdx[1]]
-    EigV3 = EigV[:,sortIdx[2]]*EigV[:,sortIdx[2]]
+    if method==1 | method ==2:
+        EigV1 = EigV[:,sortIdx[0]]*EigV[:,sortIdx[0]]
+        EigV2 = EigV[:,sortIdx[1]]*EigV[:,sortIdx[1]]
+        EigV3 = EigV[:,sortIdx[2]]*EigV[:,sortIdx[2]]
+    if method==3:
+        # print v
+        EigV1 = v[:, 0]
+        EigV2 = v[:, 1]
+        EigV3 = v[:, 2]
     EigV1 = EigV1/sum(stepLength*EigV1)
     # print sum(stepLength*EigV1)
     # print la.norm(EigV1)
