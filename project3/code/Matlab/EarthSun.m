@@ -1,8 +1,8 @@
 clear
 % initial parameters
 xSun = [0 0 0]';
-x0 = [1 0 0.3]';
-v0 = [0 5 4]';
+x0 = [1 0 0]';
+v0 = [0 6.3 0]';
 h = 0.001;
 max_t = 3;
 maxStep = round(max_t/h);
@@ -22,10 +22,10 @@ n = 1;
 while(n < maxStep)
     % verlet
     ri = xi - xSun;
-    ai = -4*3.1415^2./norm(ri.*ri).*ri;
+    ai = -4*3.1415^2./norm(ri.*ri.*ri).*ri;
     xi_1 = xi + h*vi + h^2/2*ai;
     ri_1 = xi_1 - xSun;
-    ai_1 = -4*3.1415^2./norm(ri_1.*ri_1).*ri_1;
+    ai_1 = -4*3.1415^2./norm(ri_1.*ri_1.*ri_1).*ri_1;
     vi_1 = vi + h/2*(ai_1+ai);
     % write data
     tracjectory(:,n+1) = xi_1;
