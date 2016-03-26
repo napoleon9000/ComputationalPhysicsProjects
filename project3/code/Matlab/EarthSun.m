@@ -4,6 +4,7 @@ xSun = [0 0 0]';
 x0 = [1 0 0]';
 v0 = [0 6.3 0]';
 h = 0.001;
+mEarth = 1.5E-6;
 max_t = 3;
 maxStep = round(max_t/h);
 xi = x0;
@@ -23,6 +24,7 @@ while(n < maxStep)
     % verlet
     ri = xi - xSun;
     ai = -4*3.1415^2./norm(ri.*ri.*ri).*ri;
+    
     xi_1 = xi + h*vi + h^2/2*ai;
     ri_1 = xi_1 - xSun;
     ai_1 = -4*3.1415^2./norm(ri_1.*ri_1.*ri_1).*ri_1;
