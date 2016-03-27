@@ -1,16 +1,46 @@
 clear
+clc
 clear class
-h = 0.001;
-maxStep = 4;
-Earth = planet('Earth',1.5e-6,[1,0,0],[0,6.28,0]);
-Jupiter = planet('Jupiter',9.5e-4,[5.20 0 0],[0 2.04 0]);
-S = solarSystem;
-S = S.addPlanet(Earth);
-S = S.addPlanet(Jupiter);
-S = S.godSettings(h, maxStep);
 
-%%
-while(S.currentStep < maxStep)
-    S.verlet;
+h = 1e-3;    % time step
+movieInt = 25;   
+maxStep = 10*pi;  % years
+Mercury = planet('Mercury',1.2e-7,[0.39,0,0],[0,9.96,0]);
+Venus = planet('Venus',2.4e-6,[0.72,0,0],[0,7.36,0]);
+Earth = planet('Earth',1.5e-6,[1,0,0],[0,6.28,0]);
+Mars = planet('Mars',3.3e-7,[1.52,0,0],[0,5.06,0]);
+Jupiter = planet('Jupiter',9.5e-4,[5.20 0 0],[0 3.04 0]);
+Saturn = planet('Saturn',2.75e-4,[9.54,0,0],[0,2.04,0]);
+Uranus = planet('Uranus',4.4e-5,[19.19,0,0],[0,1.43,0]);
+Neptune = planet('Neptune',5.1e-5,[30.06,0,0],[0,1.14,0]);
+Pluto = planet('Pluto',5.6e-9,[39.53,0,0],[0,0.99,0]);
+
+Moon = planet('Moon',(7.347/1.989)*1e-8,[1.00256955529 0 0],[0 1.022/30*6.28 0]);
+
+
+% Add planets
+S = solarSystem;
+S = S.godSettings(h, maxStep);
+S = S.addPlanet(Mercury);
+S = S.addPlanet(Venus);
+S = S.addPlanet(Earth);
+S = S.addPlanet(Mars);
+S = S.addPlanet(Jupiter);
+% S = S.addPlanet(Saturn);
+% S = S.addPlanet(Uranus);
+% S = S.addPlanet(Neptune);
+% S = S.addPlanet(Pluto);
+% S = S.addPlanet(Moon);
+ 
+% S = S.verlet;
+%% Run
+step = 1;
+while(S.currentStep*h <= maxStep)
+    S = S.verlet;
+    if(mod(step,movieInt) == 0)
+        S.show;
+        pause(0.01)
+    end
+    step = step + 1;
 end
 S.show;
