@@ -3,7 +3,6 @@ classdef solarSystem
     %   Detailed explanation goes here
     
     properties        
-        xSun = [0 0 0]';
         mEarth = 1.5E-6;
         h = 0.001;
         maxStep = 3;
@@ -54,20 +53,20 @@ classdef solarSystem
                     disp(['step:' num2str(obj.currentStep)])
                     disp(['i = ' num2str(i)])
                 end
-                % Calculate a from Sun
-                rS = xi - obj.xSun;
-                ai(:,i) = -4*3.1415^2./norm(rS.*rS.*rS).*rS;
-                if(obj.dispFlag == 1)
-                    disp(['di(Sun) = ' num2str(norm(rS))])
-                    disp(['ai(Sun) = ' num2str(ai(:,i)')])
-                end
-                % Calculate a from other planet
+                % Calculate a
+                ai(:,i) = 0;
+                % Calculate a from all planet
                 for j = 1:obj.numOfPlanet
                     % Excluding itself
                     if(j~=i)
-                        rj = xi - obj.x(:,j);
+                        rj = xi - obj.x(:,j,step);
                         aj = -4*3.1415^2*obj.m(j)/norm(rj.*rj.*rj).*rj;
                         ai(:,i) = ai(:,i) + aj;
+                        if(obj.dispFlag == 1)
+                            disp(['xi = ' num2str(xi')])
+                            disp(['xj = ' num2str(obj.x(:,j)')])
+                            disp(['rj = ' num2str(rj')])
+                        end
                     end
                     
                 end
@@ -77,6 +76,7 @@ classdef solarSystem
                     disp(['xi = ' num2str(xi')])
                     disp(['vi = ' num2str(vi')])
                     disp(['ai = ' num2str(ai(:,i)')])
+                    disp(['xi_1 = ' num2str(xi_1')])
                 end
 %                 disp(obj)
                 obj.x(:,i,step+1) = xi_1;
@@ -91,18 +91,13 @@ classdef solarSystem
                     disp(['step:' num2str(obj.currentStep)])
                     disp(['i = ' num2str(i)])
                 end
-                % Calculate a from Sun
-                rS = xi - obj.xSun;
-                ai_1(:,i) = -4*3.1415^2./norm(rS.*rS.*rS).*rS;
-                if(obj.dispFlag == 1)
-                    disp(['di_1(Sun) = ' num2str(norm(rS))])
-                    disp(['ai_1(Sun) = ' num2str(ai_1(:,i)')])
-                end
-                % Calculate a from other planet
+                % Calculate a
+                ai_1(:,i) = 0;
+                % Calculate a from all planet
                 for j = 1:obj.numOfPlanet
                     % Excluding itself
                     if(j~=i)
-                        rj = xi - obj.x(:,j);
+                        rj = xi - obj.x(:,j,step);
                         aj = -4*3.1415^2*obj.m(j)/norm(rj.*rj.*rj).*rj;
                         ai_1(:,i) = ai_1(:,i) + aj;
                     end
@@ -141,8 +136,6 @@ classdef solarSystem
                 plotColor(i,:) = get(plotH(i),'Color');
                 legendText = char(legendText,obj.listOfPlanet(i+1,:));
             end
-            scatter3(obj.xSun(1),obj.xSun(2),obj.xSun(3),80,'filled');
-            legendText = char(legendText,'Sun');
             legendText(1,:) = [];
             legend(legendText);
             for i = 1:obj.numOfPlanet
