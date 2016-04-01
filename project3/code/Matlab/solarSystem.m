@@ -60,7 +60,7 @@ classdef solarSystem
                     % Excluding itself
                     if(j~=i)
                         rj = xi - obj.x(:,j,step);
-                        aj = -4*3.1415^2*obj.m(j)/norm(rj.*rj.*rj).*rj;
+                        aj = -4*pi^2*obj.m(j)/(norm(rj).^2).*rj/norm(rj);
                         ai(:,i) = ai(:,i) + aj;
                         if(obj.dispFlag == 1)
                             disp(['xi = ' num2str(xi')])
@@ -98,7 +98,7 @@ classdef solarSystem
                     % Excluding itself
                     if(j~=i)
                         rj = xi - obj.x(:,j,step);
-                        aj = -4*3.1415^2*obj.m(j)/norm(rj.*rj.*rj).*rj;
+                        aj = -4*pi^2*obj.m(j)/(norm(rj).^2).*rj/norm(rj);
                         ai_1(:,i) = ai_1(:,i) + aj;
                     end
                     
@@ -147,6 +147,19 @@ classdef solarSystem
             end
             
             title(['Simulation of solar system. Current time: ' num2str(obj.h*tracSize)]);
+        end
+        function obj = plotE(obj)
+            figure
+            hold on
+            box on
+            grid on
+            for i = 1:obj.numOfPlanet
+                KE = 0.5*obj.m(i)*norm(obj.v)^2;
+                plot(KE);
+            end
+        end
+        function obj = plotDist(obj)
+            
         end
     end
 end
