@@ -1,5 +1,5 @@
 classdef solarSystem
-    %SOLARSYSTEM Summary of this class goes here
+    %SOLARSYSTEM create the class for solar system
     %   Detailed explanation goes here
     
     properties        
@@ -13,6 +13,7 @@ classdef solarSystem
         v
         currentStep = 1;
         dispFlag = 0;
+        fixSun = 0;
     end
     properties (Access = private)
         
@@ -80,6 +81,9 @@ classdef solarSystem
                 end
 %                 disp(obj)
                 obj.x(:,i,step+1) = xi_1;
+                if(obj.fixSun == 1)
+                    obj.x(:,1,step+1) = 0;
+                end
             end
             % Record the tracjectory           
 %             obj = obj.add2Trac(obj.x,obj.currentStep);
@@ -148,18 +152,62 @@ classdef solarSystem
             
             title(['Simulation of solar system. Current time: ' num2str(obj.h*tracSize)]);
         end
-        function obj = plotE(obj)
-            figure
-            hold on
-            box on
-            grid on
+        
+        function obj = plotE(obj,mode)
+            %% plot the Energy
+            % mode: 1:KE 2:PE 3:sum of KE 4:sum of PE 5:total E
+            KE = zeros(obj.numOfPlanet,round(obj.maxStep/obj.h)+1);
+            PE = KE;
             for i = 1:obj.numOfPlanet
-                KE = 0.5*obj.m(i)*norm(obj.v)^2;
-                plot(KE);
+                KE(i,:) = 0.5*obj.m(i)*sum(squeeze(obj.v(:,i,:)).*squeeze(obj.v(:,i,:)));
+                for j = 1:obj.numOfPlanet
+                   if(i~=j)
+                       rVector = squeeze(obj.x(:,i,:))-squeeze(obj.x(:,j,:));
+                       r = sqrt(sum(rVector.*rVector));
+%                        figure
+%                        plot(r)
+                       PE(i,:) = PE(i,:)-2*pi.^2*obj.m(i)*obj.m(j)./r;
+                   end
+                end
             end
-        end
-        function obj = plotDist(obj)
-            
+            for i = 1:length(mode)
+                figure
+                hold on
+                box on
+                grid on
+                if(mode(i) == 1)                
+                    legendText = [];
+                    for j = 1:obj.numOfPlanet
+                        plot(KE(j,:));
+                        legendText = char(legendText,obj.listOfPlanet(j+1,:));
+                    end
+                    legendText(1,:) = [];
+                    title('The kinectic Energy vs time');
+                    legend(legendText);
+                end
+                if(mode(i) == 2)                    
+                    plot(sum(KE));
+                    title('The total kinectic Energy vs time');
+                end
+                if(mode(i) == 3)          
+                    legendText = [];
+                    for j = 1:obj.numOfPlanet
+                        plot(PE(j,:));
+                        legendText = char(legendText,obj.listOfPlanet(j+1,:));
+                    end
+                    legendText(1,:) = [];
+                    title('The potential Energy vs time');
+                    legend(legendText);
+                end
+                if(mode(i) == 4)                    
+                    plot(sum(PE));
+                    title('The total potential Energy vs time');
+                end
+                if(mode(i) == 5)                    
+                    plot(sum(PE)+sum(KE));
+                    title('The total Energy vs time');
+                end
+            end
         end
     end
 end
