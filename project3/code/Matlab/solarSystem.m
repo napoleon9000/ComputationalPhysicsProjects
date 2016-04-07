@@ -122,11 +122,12 @@ classdef solarSystem
 %         end
         function obj = show(obj)
             
-            clf
+%             clf
             legendText = [];
             hold on
             axis equal
             grid on
+            box on
             plotH = zeros(1,obj.numOfPlanet);
             plotColor = zeros(obj.numOfPlanet,3);
             tracSize = obj.currentStep;
@@ -155,7 +156,7 @@ classdef solarSystem
         
         function obj = plotE(obj,mode)
             %% plot the Energy
-            % mode: 1:KE 2:PE 3:sum of KE 4:sum of PE 5:total E
+            % mode: 1:KE 2:sum of KE 3:PE  4:sum of PE 5:total E
             KE = zeros(obj.numOfPlanet,round(obj.maxStep/obj.h)+1);
             PE = KE;
             for i = 1:obj.numOfPlanet

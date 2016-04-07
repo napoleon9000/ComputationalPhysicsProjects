@@ -1,17 +1,18 @@
 clear
 clc
 clear class
+hold on
 
 movieFlag = 0;
-h = 1e-3;    % time step
+h = 0.001;    % time step
 movieInt = 20;   
-maxStep = 20;  % years
+maxStep = 6;  % years
 Sun = planet('Sun',1,[0,0,0],[0,0,0]);
-Sun2 = planet('Sun2',1,[0,5,0],[5,0,0]);
-Sun3 = planet('Sun3',1,[5,0,0],[0,5,0]);
+Sun2 = planet('Sun2',1,[0,1,0],[-1,0.5,0]);
+Sun3 = planet('Sun3',1,[1,0,0],[0,-1,0]);
 Mercury = planet('Mercury',1.2e-7,[0.39,0,0],[0,9.96,0]);
 Venus = planet('Venus',2.4e-6,[0.72,0,0],[0,7.36,0]);
-Earth = planet('Earth',1.5e-6,[1,0,0],[0,2*pi,0]);
+Earth = planet('Earth',1.5e-6,[1,0,0],[0,2*pi*1.5,0]);
 Mars = planet('Mars',3.3e-7,[1.52,0,0],[0,5.06,0]);
 Jupiter = planet('Jupiter',9.5e-4,[5.20 0 0],[0 3.04 0]);
 Saturn = planet('Saturn',2.75e-4,[9.54,0,0],[0,2.04,0]);
@@ -30,7 +31,7 @@ S = S.addPlanet(Sun);
 % S = S.addPlanet(Venus);
 S = S.addPlanet(Earth);
 % S = S.addPlanet(Mars);
-S = S.addPlanet(Jupiter);
+% S = S.addPlanet(Jupiter);
 % S = S.addPlanet(Saturn);
 % S = S.addPlanet(Uranus);
 % S = S.addPlanet(Neptune);
@@ -55,4 +56,5 @@ while(S.currentStep*h <= maxStep)
     step = step + 1;
 end
 S.show;
-S.plotE([3 4 5]);
+% figure
+% S.plotE([2 4 5]);
