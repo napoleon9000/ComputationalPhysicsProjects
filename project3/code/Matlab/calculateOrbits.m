@@ -4,14 +4,10 @@ clear class
 hold on
 
 movieFlag = 0;
-h = 0.0005;    % time step
+h = 0.0001;    % time step
 movieInt = 20;   
-maxStep = 100;  % years
-<<<<<<< HEAD
+maxStep = 5;  % years
 Sun = planet('Sun',1,[0,0,0],[0,0,0]);
-=======
-Sun = planet('Sun',1,[0,0,0],[0,-0.0029,0]);
->>>>>>> oop
 Sun2 = planet('Sun2',1,[0,1,0],[-1,0.5,0]);
 Sun3 = planet('Sun3',1,[1,0,0],[0,-1,0]);
 % Mercury = planet('Mercury',1.2e-7,[0.39,0,0],[0,9.96,0]);
@@ -36,7 +32,7 @@ S = S.addPlanet(Mercury);
 % S = S.addPlanet(Venus);
 % S = S.addPlanet(Earth);
 % S = S.addPlanet(Mars);
-S = S.addPlanet(Jupiter);
+% S = S.addPlanet(Jupiter);
 % S = S.addPlanet(Saturn);
 % S = S.addPlanet(Uranus);
 % S = S.addPlanet(Neptune);
@@ -51,6 +47,7 @@ S = S.addPlanet(Jupiter);
 step = 1;
 while(S.currentStep*h <= maxStep)
     S = S.verletRT;
+%     S = S.verlet;
     if(mod(step,movieInt) == 0&& movieFlag == 1)
         S.show;
         pause(0.01)
@@ -60,8 +57,8 @@ while(S.currentStep*h <= maxStep)
     end
     step = step + 1;
 end
-S.show;
+% S.show;
 S.perihelion(2);
 % figure
-S.plotE([2 4 5]);
+% S.plotE([2 4 5]);
 finishNotice(1);

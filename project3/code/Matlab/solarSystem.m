@@ -40,13 +40,13 @@ classdef solarSystem
         end   
         function obj = verlet(obj)
             % For each planet,
-            
             ai = zeros(3,obj.numOfPlanet);
             ai_1 = ai;
             step = obj.currentStep;
-            if(mod(obj.maxStep,step) == 1000)
-                disp(step)
-            end
+%             if(mod(step,1000) == 0)
+%                 disp(step)
+%             end
+            
             for i = 1:obj.numOfPlanet
                 xi = obj.x(:,i,step);
                 vi = obj.v(:,i,step);
@@ -71,7 +71,6 @@ classdef solarSystem
                     end
                     
                 end
-                
                 xi_1 = xi + obj.h*vi + obj.h^2/2*ai(:,i);
                 if(obj.dispFlag == 1)
                     disp(['xi = ' num2str(xi')])
@@ -87,7 +86,6 @@ classdef solarSystem
             end
             % Record the tracjectory           
 %             obj = obj.add2Trac(obj.x,obj.currentStep);
-            
             % Again, for each planet, calculate ai+1 from xi+1,
             for i = 1:obj.numOfPlanet
                 xi = obj.x(:,i,step+1);
@@ -113,8 +111,8 @@ classdef solarSystem
                     disp(['ai_1 = ' num2str(ai_1(:,i)')])
                 end
             end
-            obj.currentStep = obj.currentStep + 1;
-                       
+            obj.currentStep = obj.currentStep + 1;    
+            
         end
 %         function obj = add2Trac(obj,position,velocity,planetyIdx,t)
 %             obj.x(:,planetyIdx,t) = position;
@@ -126,9 +124,9 @@ classdef solarSystem
             ai = zeros(3,obj.numOfPlanet);
             ai_1 = ai;
             step = obj.currentStep;
-            if(mod(obj.maxStep,step) == 1000)
-                disp(step)
-            end
+%             if(mod(obj.maxStep,step) == 1000)
+%                 disp(step)
+%             end
             for i = 1:obj.numOfPlanet
                 xi = obj.x(:,i,step);
                 vi = obj.v(:,i,step);
