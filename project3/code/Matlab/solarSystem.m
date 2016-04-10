@@ -120,9 +120,115 @@ classdef solarSystem
 %             obj.x(:,planetyIdx,t) = position;
 %             obj.v(:,planetyIdx,t) = velocity;
 %         end
+        function obj = verletRT(obj)
+            % For each planet,
+            
+            ai = zeros(3,obj.numOfPlanet);
+            ai_1 = ai;
+            step = obj.currentStep;
+            if(mod(obj.maxStep,step) == 1000)
+                disp(step)
+            end
+            for i = 1:obj.numOfPlanet
+                xi = obj.x(:,i,step);
+                vi = obj.v(:,i,step);
+                if(obj.dispFlag == 1)
+                    disp(['step:' num2str(obj.currentStep)])
+                    disp(['i = ' num2str(i)])
+                end
+                % Calculate a
+                ai(:,i) = 0;
+                % Calculate a from all planet
+                for j = 1:obj.numOfPlanet
+                    % Excluding itself
+                    if(j~=i)
+                        rj = xi - obj.x(:,j,step);
+                        l = norm(cross(xi,vi));
+                        RT = (1+3*l.^2/norm(rj).^2/63197.8^2);
+                        aj = -4*pi^2*obj.m(j)/(norm(rj).^2).*rj/norm(rj)*RT;
+                        ai(:,i) = ai(:,i) + aj;
+                        if(obj.dispFlag == 1)
+                            disp(['xi = ' num2str(xi')])
+                            disp(['xj = ' num2str(obj.x(:,j)')])
+                            disp(['rj = ' num2str(rj')])
+                        end
+                    end
+                    
+                end
+                
+                xi_1 = xi + obj.h*vi + obj.h^2/2*ai(:,i);
+                if(obj.dispFlag == 1)
+                    disp(['xi = ' num2str(xi')])
+                    disp(['vi = ' num2str(vi')])
+                    disp(['ai = ' num2str(ai(:,i)')])
+                    disp(['xi_1 = ' num2str(xi_1')])
+                end
+%                 disp(obj)
+                obj.x(:,i,step+1) = xi_1;
+                if(obj.fixSun == 1)
+                    obj.x(:,1,step+1) = 0;
+                end
+            end
+            % Record the tracjectory           
+%             obj = obj.add2Trac(obj.x,obj.currentStep);
+            
+            % Again, for each planet, calculate ai+1 from xi+1,
+            for i = 1:obj.numOfPlanet
+                xi = obj.x(:,i,step+1);
+                if(obj.dispFlag == 1)
+                    disp(['step:' num2str(obj.currentStep)])
+                    disp(['i = ' num2str(i)])
+                end
+                % Calculate a
+                ai_1(:,i) = 0;
+                % Calculate a from all planet
+                for j = 1:obj.numOfPlanet
+                    % Excluding itself
+                    if(j~=i)
+                        l = norm(cross(xi_1,vi));
+                        RT_1 = (1+3*l.^2/norm(rj).^2/63197.8^2);
+                        rj = xi - obj.x(:,j,step);
+                        aj = -4*pi^2*obj.m(j)/(norm(rj).^2).*rj/norm(rj)*RT_1;
+                        ai_1(:,i) = ai_1(:,i) + aj;
+                    end
+                    
+                end
+                vi_1 = obj.v(:,i,step) + obj.h/2*(ai_1(:,i)+ai(:,i));
+                obj.v(:,i,step+1) = vi_1;
+                if(obj.dispFlag == 1)
+                    disp(['ai_1 = ' num2str(ai_1(:,i)')])
+                end
+            end
+            obj.currentStep = obj.currentStep + 1;
+                       
+        end
+        function obj = perihelion(obj,planetyId)
+            traj = squeeze(obj.x(:,planetyId,:))-squeeze(obj.x(:,1,:));            
+            r = sqrt(sum(traj.^2));
+            r0 = r(1:end-2);
+            r1 = r(2:end-1);
+            r2 = r(3:end);
+            timestep = 1:length(r);
+            minIdx = timestep(r0 >= r1 & r2 >=r1)+1;
+            pAngle = atan(-traj(2,minIdx)./traj(1,minIdx));
+            figure
+            hold on
+%             plot(r,'.');
+%             plot(timestep(minIdx),r(minIdx),'*')
+%             reShapeX = reshape(r,round(0.24/obj.h),length(r)/round(0.24/obj.h));
+%             [minReshapeX, minIdx ] = min(reShapeX);
+%             pAngle = atan(-traj(2,minIdx)./traj(1,minIdx));
+%             figure
+            plot(pAngle,'o-');
+%             plot(r);
+%             hold on
+%             plot(minReshapeX,'o');
+%             minReshapeX
+%             obj.currentStep
+        end
         function obj = show(obj)
             
-%             clf
+            clf
             legendText = [];
             hold on
             axis equal

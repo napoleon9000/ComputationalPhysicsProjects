@@ -4,13 +4,14 @@ clear class
 hold on
 
 movieFlag = 0;
-h = 0.001;    % time step
+h = 0.0005;    % time step
 movieInt = 20;   
-maxStep = 6;  % years
+maxStep = 100;  % years
 Sun = planet('Sun',1,[0,0,0],[0,0,0]);
 Sun2 = planet('Sun2',1,[0,1,0],[-1,0.5,0]);
 Sun3 = planet('Sun3',1,[1,0,0],[0,-1,0]);
-Mercury = planet('Mercury',1.2e-7,[0.39,0,0],[0,9.96,0]);
+% Mercury = planet('Mercury',1.2e-7,[0.39,0,0],[0,9.96,0]);
+Mercury = planet('Mercury',1.2e-7,[0.3075,0,0],[0,12.44,0]);
 Venus = planet('Venus',2.4e-6,[0.72,0,0],[0,7.36,0]);
 Earth = planet('Earth',1.5e-6,[1,0,0],[0,2*pi*1.5,0]);
 Mars = planet('Mars',3.3e-7,[1.52,0,0],[0,5.06,0]);
@@ -27,9 +28,9 @@ Moon = planet('Moon',(7.347/1.989)*1e-8,[1.00256955529 0 0],[0 (1+1.022/30)*6.28
 S = solarSystem;
 S = S.godSettings(h, maxStep);
 S = S.addPlanet(Sun);
-% S = S.addPlanet(Mercury);
+S = S.addPlanet(Mercury);
 % S = S.addPlanet(Venus);
-S = S.addPlanet(Earth);
+% S = S.addPlanet(Earth);
 % S = S.addPlanet(Mars);
 % S = S.addPlanet(Jupiter);
 % S = S.addPlanet(Saturn);
@@ -45,7 +46,7 @@ S = S.addPlanet(Earth);
 %% Run
 step = 1;
 while(S.currentStep*h <= maxStep)
-    S = S.verlet;
+    S = S.verletRT;
     if(mod(step,movieInt) == 0&& movieFlag == 1)
         S.show;
         pause(0.01)
@@ -56,5 +57,6 @@ while(S.currentStep*h <= maxStep)
     step = step + 1;
 end
 S.show;
+S.perihelion(2);
 % figure
 % S.plotE([2 4 5]);
