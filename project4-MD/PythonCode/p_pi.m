@@ -8,3 +8,4 @@ box on
 grid on
 data3 = [114.2 67.9 37.0 30.9];
 plot(fliplr(data1), fliplr(data1./data3),'o-')
+legend('5.405 A','5.260 A')
