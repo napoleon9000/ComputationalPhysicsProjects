@@ -1,0 +1,9 @@
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
+time     ke      pe    etot  momentum diffCoeff temp 
